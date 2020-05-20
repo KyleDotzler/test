@@ -1,0 +1,32 @@
+    [WebMethod]
+    public bool AddUser(string email,string homeAddress,string password, string recoveryQuestion, string recoveryAnswer, string userName)
+    {
+        try
+        {
+            //Creates the connection path to the database used for this project as well as opens the connection path for use
+            OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0; Data Source=" + Server.MapPath("\\DotCarsDb.accdb"));
+            conn.Open();
+
+            //Calls a Query in the in the database to add a new user using the given parameters
+            OleDbCommand cmd = new OleDbCommand("AddUser", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@homeAddress", homeAddress);
+            cmd.Parameters.AddWithValue("@password", password);
+            cmd.Parameters.AddWithValue("@recoveryQuestion", recoveryQuestion);
+            cmd.Parameters.AddWithValue("@recoveryAnswer", recoveryAnswer);
+            cmd.Parameters.AddWithValue("@userName", userName);
+            cmd.ExecuteNonQuery();
+
+            //Closes the connection path
+            conn.Close();
+
+            //Returns true if the user was successfully added
+            return true;
+        }
+        catch
+        {
+            //Returns false if the user wasn't successfully added
+            return false;
+        }
+    }
